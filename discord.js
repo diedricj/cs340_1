@@ -5,12 +5,24 @@ module.exports = function(){
 
     function getDiscord(res, mysql, context, complete){
         //mysql.pool.query("SELECT bsg_people.character_id as id, fname, lname, bsg_planets.name AS homeworld, age FROM bsg_people INNER JOIN bsg_planets ON homeworld = bsg_planets.planet_id", function(error, results, fields){
-        mysql.pool.query("SELECT discord_name FROM discord", function(error, results, fields){
+        mysql.pool.query("SELECT discord_name, id FROM discord", function(error, results, fields){
             if(error){
                 res.write(JSON.stringify(error));
                 res.end();
             }
             context.discord = results;
+            complete();
+        });
+    }
+
+    function getADiscord(res, mysql, context, id, complete){
+        //mysql.pool.query("SELECT bsg_people.character_id as id, fname, lname, bsg_planets.name AS homeworld, age FROM bsg_people INNER JOIN bsg_planets ON homeworld = bsg_planets.planet_id", function(error, results, fields){
+        mysql.pool.query("SELECT discord_name, id FROM discord where id = " + id, function(error, results, fields){
+            if(error){
+                res.write(JSON.stringify(error));
+                res.end();
+            }
+            context.discord = results[0];
             complete();
         });
     }
@@ -21,7 +33,7 @@ module.exports = function(){
         var callbackCount = 0;
         console.log("trying here");
         var context = {};
-        context.jsscripts = ["deleteperson.js","filterpeople.js","searchpeople.js", "deletepokemon.js"];
+        context.jsscripts = ["deleteperson.js","filterpeople.js","searchpeople.js", "deletediscord.js"];
         var mysql = req.app.get('mysql');
         getDiscord(res, mysql, context, complete);
         function complete(){
@@ -34,12 +46,11 @@ module.exports = function(){
         }
     });
 
-    router.delete('/:pid/:tid', function(req, res){
+    router.delete('/:id', function(req, res){
         console.log("I am in delete");
         var mysql = req.app.get('mysql');
-        var sql = "DELETE FROM pokedex WHERE id = ?";
-        var inserts = [req.params.id];
-        sql = mysql.pool.query(sql, inserts, function(error, results, fields){
+        var sql = "DELETE FROM discord WHERE id = " + req.params.id;
+        sql = mysql.pool.query(sql, function(error, results, fields){
             if(error){
                 console.log(error)
                 res.write(JSON.stringify(error));
@@ -51,20 +62,20 @@ module.exports = function(){
         })
     })
 
-    router.get('/:pid', function(req, res){
+    router.get('/:id', function(req, res){
         console.log(req.params);
         console.log("IM IN THE UPDATE");
         callbackCount = 0;
         var context = {};
-        context.jsscripts = ["selectedplanet.js", "updateoffer.js", "selectoptions.js", "updatepokedex.js"];
+        context.jsscripts = ["selectedplanet.js", "updateoffer.js", "selectoptions.js", "updatediscord.js"];
         var mysql = req.app.get('mysql');
-        getAPokemon(res, mysql, context, req.params.pid, complete);
+        getADiscord(res, mysql, context, req.params.id, complete);
         //getPlanets(res, mysql, context, complete);
         function complete(){
             console.log(context.pokemon);
             callbackCount++;
             if(callbackCount >= 1){
-                res.render('update-pokedex', context);
+                res.render('update-discord', context);
             }
 
         }
@@ -77,7 +88,7 @@ module.exports = function(){
         console.log(req.body)
 
         console.log("THPSE WERE PARAMS")
-        var sql = "UPDATE pokedex set pokemon_name = '" + req.body.pokemon_name + "', regional = " + req.body.regional + ", shiny = " + req.body.shiny + ", special = " + req.body.shiny + " WHERE id = " + req.params.pid
+        var sql = "UPDATE discord set discord_name = '" + req.body.discord_name + "' WHERE id = " + req.params.pid
         console.log(sql);
         sql = mysql.pool.query(sql,function(error, results, fields){
             if(error){

@@ -2,7 +2,7 @@
     Uses express, dbcon for database connection, body parser to parse form data
     handlebars for HTML templates
 */
-
+var PORT = process.env.PORT || 3196;
 var express = require('express');
 var mysql = require('./dbcon.js');
 var bodyParser = require('body-parser');
@@ -20,10 +20,10 @@ app.set('port', process.argv[2]);
 app.set('mysql', mysql);
 app.use('/pokedex', require('./pokedex.js'));
 app.use('/offer', require('./offer.js'));
-app.use('/discord', require('./discord.js'));
 app.use('/accept', require('./accept.js'));
 app.use('/teams', require('./teams.js'));
 app.use('/users', require('./users.js'));
+app.use('/discord', require('./discord.js'));
 app.use('/', express.static('public'));
 
 app.use(function(req,res){
@@ -37,6 +37,6 @@ app.use(function(err, req, res, next){
   res.render('500');
 });
 
-app.listen(app.get('port'), function(){
-  console.log('Express started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate.');
+app.listen(PORT, function(){
+  console.log('Express started on http://localhost:' + PORT + '; press Ctrl-C to terminate.');
 });

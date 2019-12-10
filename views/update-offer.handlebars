@@ -1,0 +1,28 @@
+<form id="update-offer">
+  Pokemon Name: <select id="pokemon_name" name="pokemon_name">
+  {{#each pokemon}}
+       <option value="{{pokemon_name}}">{{pokemon_name}}</option>
+     {{/each}}
+  </select><br><br>
+  Trainer Name: <select id="trainer_name" name="trainer_name">
+    {{#each trainer}}
+         <option value="{{trainer_name}}">{{trainer_name}}</option>
+       {{/each}}
+    </select><br><br>
+
+  Shiny: <select id="shiny" name="shiny">
+     <option value="1">Yes</option>
+     <option value="0">No</option>
+  </select><br> <br>
+  Regional: <select id="regional" name="regional">
+     <option value="1">Yes</option>
+     <option value="0">No</option>
+  </select><br> <br>
+  Special: <select id="special" name="special">
+     <option value="1">Yes</option>
+     <option value="0">No</option>
+  </select><br> <br>
+
+  <button onclick="updateOffer({{offer.pokemon_id}}, {{offer.trainer_id}})" class="button"> Submit </button>
+</form>
+<script defer>selectoptions({{offer.regional}}, {{offer.shiny}}, {{offer.special}}, "{{offer.trainer_name}}", "{{offer.pokemon_name}}");</script>

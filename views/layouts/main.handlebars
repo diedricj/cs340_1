@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+<head>
+	<title>PoGo Trade</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    {{#each jsscripts}}
+    <script src="/static/{{this}}"></script>
+    {{/each}}
+    <style>
+	div.scrollbar {
+	  background-color: #77AED2;
+	  width: 110px;
+	  height: 110px;
+	  overflow: scroll;
+	}
+</style>
+</head>
+<body>
+  <header>
+         <h1>
+         PokeTrader
+      </header>
+	<nav id="articles">
+         <ul>
+           <li>
+              <a class="white-bg darkbrown boxshadow" href="/">
+              Home
+              </a>
+           </li>
+           <li>
+              <a class="green-bg white boxshadow" href="offer">
+              Offering
+              </a>
+           </li>
+           <li>
+              <a class="black-bg white boxshadow" href="accept">
+              Accepting
+              </a>
+           </li>
+           <li>
+              <a class="black-bg white boxshadow" href="discord">
+              Discord
+              </a>
+           </li>
+           <li>
+              <a class="black-bg white boxshadow" href="users">
+              Trainers
+              </a>
+           </li>
+           <li>
+              <a class="black-bg white boxshadow" href="pokedex">
+              Pokedex
+              </a>
+           </li>
+           <li>
+              <a class="black-bg white boxshadow" href="teams">
+              Teams
+              </a>
+           </li>
+            <!--<li><a class="lightbrown-bg black boxshadow" href="<?php echo $sitepath; ?>topic-folder-e/index.php">Menu item</a></li> -->
+         </ul>
+      </nav>
+	{{{body}}}
+</body>
+</html>

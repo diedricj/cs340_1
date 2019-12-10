@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+   <head>
+      <!-- meta charset -->
+      <title>PokeTrade</title>
+      <!-- title tag -->
+      <link rel="stylesheet" href="style.css" />
+      <link href="https://fonts.googleapis.com/css?family=Merriweather:700|Noto+Sans" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+      <meta charset="utf-8" />
+      <!-- fonts -->
+      <!-- favicons -->
+      <!-- scripts -->
+   </head>
+   <body>
+      <main>
+         <article>
+         <h2>Pokedex</h2>
+         <button class="button green-bg" id="myBtn">New</button>
+
+         <div id="myModal" class="modal">
+
+           <!-- Modal content -->
+           <div class="modal-content">
+             <span class="close">&times;</span>
+             <form action="/pokedex" method="post">
+               Pokedex ID:<br>
+               <input type="int" name="dex_id" value=""><br><br>
+               Pokemon Name:<br>
+               <input type="text" name="pokemon_name" value=""><br><br>
+               Shiny: <select name="shiny">
+                  <option value="0">No</option>
+                  <option value="1">Yes</option>
+               </select><br> <br>
+               Regional: <select name="regional">
+                  <option value="0">No</option>
+                  <option value="1">Yes</option>
+               </select><br> <br>
+               Special: <select name="special">
+                  <option value="0">No</option>
+                  <option value="1">Yes</option>
+               </select><br> <br>
+               <button class="button"> Submit </button>
+             </form>
+           </div>
+
+         </div>
+
+         <div id="myModal2" class="modal2">
+
+           <!-- Modal content -->
+           <div class="modal-content">
+             <span class="close">&times;</span>
+             <form>
+               Pokemon Name:<br>
+               <input type="text" name="firstname" value=""><br><br>
+               <button class="button"> Confirm </button>
+               <button class="button"> Remove </button>
+             </form>
+           </div>
+
+         </div>
+
+
+         <input type="text" id="offersInput" onkeyup="PokedexFilter()" placeholder="Search..">
+         <button class="button green-bg"> Search </button>
+
+         <table id="PokedexTable">
+            <thead>
+               <tr>
+                  <th>Pokedex ID</th>
+                  <th>Pokemon Name</th>
+                  <th>Regional</th>
+                  <th>Shiny</th>
+                  <th>Special</th>
+                  <th>Edit</th>
+                  <th>Delete</th>
+               </tr>
+            </thead>
+            <tbody>
+               {{#each pokemon}}
+               <tr>
+                 <td>{{dex_id}}</td>
+                 <td>{{pokemon_name}}</td>
+                 <td>{{regional}}</td>
+                 <td>{{shiny}}</td>
+                 <td>{{special}}</td>
+                 <td><a href="/pokedex/{{id}}" >edit</a></td>
+                 <td><form action="#" method="POST">
+                        <input type="hidden" name="remove_id" value="{{this.id}}">
+                        <button type="submit" formaction="/pokedex/remove">Remove</button>
+                     </form>
+                 </td>
+               </tr>
+               {{/each}}
+            </tbody>
+         </table>
+       </article>
+      </main>
+
+      <script>
+      var modal = document.getElementById("myModal");
+
+      // Get the button that opens the modal
+      var btn = document.getElementById("myBtn");
+
+      // Get the <span> element that closes the modal
+      var span = document.getElementsByClassName("close")[0];
+
+      // When the user clicks the button, open the modal
+      btn.onclick = function() {
+        modal.style.display = "block";
+      }
+
+      function edit() {
+        modal2.style.display = "block";
+      }
+
+      // When the user clicks on <span> (x), close the modal
+      span.onclick = function() {
+        modal.style.display = "none";
+      }
+
+      // When the user clicks anywhere outside of the modal, close it
+      window.onclick = function(event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+          modal2.style.display = "none";
+        }
+      }
+
+
+      function offersFilter() {
+        // Declare variables
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("offersInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("offersTable");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows, and hide those who don't match the search query
+        for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[0];
+          if (td) {
+            console.log(td.textContent)
+            console.log(filter)
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+              tr[i].style.display = "";
+            } else {
+              tr[i].style.display = "none";
+            }
+          }
+        }
+      }
+      </script>
+
+   </body>
+</html>

@@ -1,0 +1,18 @@
+<form id="update-pokedex">
+  Pokemon Name:<br>
+  <input type="text" name="pokemon_name" value="{{pokemon.pokemon_name}}"><br><br>
+  Shiny: <select id="shiny" name="shiny">
+     <option value="1">Yes</option>
+     <option value="0">No</option>
+  </select><br> <br>
+  Regional: <select id="regional" name="regional">
+     <option value="1">Yes</option>
+     <option value="0">No</option>
+  </select><br> <br>
+  Special: <select id="special" name="special">
+     <option value="1">Yes</option>
+     <option value="0">No</option>
+  </select><br> <br>
+  <button onclick="updatePokedex({{pokemon.id}})" class="button"> Submit </button>
+  <script defer>selectoptions({{pokemon.regional}}, {{pokemon.shiny}}, {{pokemon.special}});</script>
+</form>

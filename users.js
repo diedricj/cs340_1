@@ -38,7 +38,7 @@ module.exports = function(){
 
     function getUser(res, mysql, context, id, complete){
         //mysql.pool.query("SELECT bsg_people.character_id as id, fname, lname, bsg_planets.name AS homeworld, age FROM bsg_people INNER JOIN bsg_planets ON homeworld = bsg_planets.planet_id", function(error, results, fields){
-        mysql.pool.query("SELECT trainer.trainer_name, team.team_name from trainer join team on team.id = trainer.team_id where trainer.id =" + id, function(error, results, fields){
+        mysql.pool.query("SELECT trainer.trainer_name, trainer.id, team.team_name from trainer join team on team.id = trainer.team_id where trainer.id =" + id, function(error, results, fields){
             if(error){
                 res.write(JSON.stringify(error));
                 res.end();
@@ -54,6 +54,7 @@ module.exports = function(){
         var callbackCount = 0;
         console.log("trying here");
         var context = {};
+        context.jsscripts = ["selectedplanet.js", "updateoffer.js", "selectoptions.js", "deleteuser.js"];
         var mysql = req.app.get('mysql');
         getUsers(res, mysql, context, complete);
         getTeams(res, mysql, context, complete);
@@ -67,12 +68,33 @@ module.exports = function(){
         }
     });
 
+    router.put('/:pid', function(req, res){
+        var mysql = req.app.get('mysql');
+        console.log("IN PUT")
+        console.log("PID:" + req.params.pid)
+        console.log(req.body)
+
+        console.log("THPSE WERE PARAMS")
+        var sql = "UPDATE trainer set trainer_name = '" + req.body.trainer_name + "' WHERE id = " + req.params.pid
+        console.log(sql);
+        sql = mysql.pool.query(sql,function(error, results, fields){
+            if(error){
+                console.log(error)
+                res.write(JSON.stringify(error));
+                res.end();
+            }else{
+                res.status(200);
+                res.end();
+            }
+        });
+    });
+
     router.get('/:id', function(req, res){
         console.log(req.params);
         console.log("IM IN THE UPDATE");
         callbackCount = 0;
         var context = {};
-        context.jsscripts = ["selectedplanet.js", "updateoffer.js", "selectoptions.js", "updatepokedex.js"];
+        context.jsscripts = ["selectedplanet.js", "updateoffer.js", "selectoptions.js", "updateuser.js"];
         var mysql = req.app.get('mysql');
         getUser(res, mysql, context, req.params.id, complete);
         getTeams(res, mysql, context, complete);
@@ -85,6 +107,23 @@ module.exports = function(){
 
         }
     });
+
+
+    router.delete('/:id', function(req, res){
+        console.log("I am in delete");
+        var mysql = req.app.get('mysql');
+        var sql = "DELETE FROM trainer WHERE id = " + req.params.id;
+        sql = mysql.pool.query(sql, function(error, results, fields){
+            if(error){
+                console.log(error)
+                res.write(JSON.stringify(error));
+                res.status(400);
+                res.end();
+            }else{
+                res.status(202).end();
+            }
+        })
+    })
 
     router.post('/', function(req, res){
         if (req.body['add']){

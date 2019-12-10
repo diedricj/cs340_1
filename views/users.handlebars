@@ -15,7 +15,7 @@
    <body>
       <main>
          <article>
-         <h2>Users</h2>
+         <h2>Trainers</h2>
          <button class="button green-bg" id="myBtn">Add Trainer</button>
 
          <div id="myModal" class="modal">
@@ -58,6 +58,7 @@
                   <th>Trainer Name</th>
                   <th>Team Name</th>
                   <th>Edit</th>
+                  <th>Delete</th>
                </tr>
             </thead>
             <tbody>
@@ -67,6 +68,7 @@
                <td>{{trainer_name}}</td>
                <td>{{team_name}}</td>
                <td><a href="/users/{{id}}" >edit</a></td>
+               <td><button onclick="deleteUser({{id}})">delete</button>
                </tr>
                {{/each}}
             </tbody>

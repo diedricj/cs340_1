@@ -1,4 +1,4 @@
-<form id="update-pokedex">
+<form id="update-user">
   Trainer Name:<br>
   <input type="text" name="trainer_name" value="{{user.trainer_name}}"><br><br>
   Team:<br>
@@ -7,6 +7,5 @@
        <option>{{team_name}}</option>
      {{/each}}
    </select><br>
-  <button onclick="updatePokedex({{pokemon.id}})" class="button"> Submit </button>
-  <script defer>selectoptions({{pokemon.regional}}, {{pokemon.shiny}}, {{pokemon.special}});</script>
+  <button onclick="updateUser({{user.id}})" class="button"> Submit </button>
 </form>

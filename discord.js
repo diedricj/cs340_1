@@ -103,6 +103,7 @@ module.exports = function(){
     });
 
     router.post('/', function(req, res){
+        if (req.body['add']){
         console.log("im in ur post")
         console.log(req.body)
         var mysql = req.app.get('mysql');
@@ -118,6 +119,30 @@ module.exports = function(){
                 res.redirect('/discord');
             }
         });
+        } else if (req.body['search']){
+            console.log("Searching");
+            var callbackCount = 0;
+            var context = {};
+            context.jsscripts = ["deleteperson.js","filterpeople.js","searchpeople.js", "deletediscord.js"];
+            var mysql = req.app.get('mysql');
+            var sql =  "SELECT discord.discord_name, id FROM discord WHERE discord.discord_name = '" + req.body.searchInput + "';";
+            console.log(req.body);
+           sql = mysql.pool.query(sql, function(error, results, fields){
+                if(error){
+                res.write(JSON.stringify(error));
+                res.end();
+            }
+            context.discord = results;
+            complete();
+            })
+            function complete(){
+                callbackCount++;
+                if(callbackCount >= 1){
+                    res.render('discord', context);
+                }
+
+            }
+        }
     });
 
     return router;

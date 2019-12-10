@@ -26,13 +26,15 @@
              <form action="/discord" method="post">
                Discord Name:<br>
                <input type="text" name="discord_name" value=""><br><br>
-               <button class="button"> Submit </button>
+               <button class="button" name = "add" value = "add"> Submit </button>
              </form>
            </div>
 
          </div>
-         <input type="text" id="offersInput" onkeyup="DiscordFilter()" placeholder="Search..">
-         <button class="button green-bg"> Search </button>
+         <form action="/discord" method="post">
+           <input type="text" id="searchInput" name= "searchInput" placeholder="Search.." value ="">
+           <button class="button green-bg" name = "search" value = "search"> Search </button>
+         </form>
 
          <table id="DiscordTable">
             <thead>

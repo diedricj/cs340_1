@@ -47,17 +47,19 @@
                   <option value="0">No</option>
                </select><br> <br>
 
-               <button class="button"> Submit </button>
+               <button class="button" name = "add" value = "add"> Submit </button>
              </form>
            </div>
 
          </div>
 
-         <input type="text" id="offersInput" onkeyup="offersFilter()" placeholder="Search..">
-         <input type="radio" name="gender" value="male" checked> Pokemon
-         <input type="radio" name="gender" value="female"> Trainer
-         <input type="radio" name="gender" value="other"> Discord<br>
-         <button class="button green-bg"> Search </button>
+         <form action="/accept" method="post">
+           <input type="text" id="searchInput" name= "searchInput" placeholder="Search.." value ="">
+           <input type="radio" name="searchType" value="pokedex.pokemon_name" checked> Pokemon
+           <input type="radio" name="searchType" value="trainer.trainer_name"> Trainer
+           <input type="radio" name="searchType" value="discord.discord_name"> Discord<br>
+           <button class="button green-bg" name = "search" value = "search"> Search </button>
+         </form>
          <table id="acceptTable">
             <thead>
                <tr>

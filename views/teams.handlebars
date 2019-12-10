@@ -28,22 +28,23 @@
                <input type="text" name="team_name" value=""><br><br>
                Team Color:<br>
                <input type="text" name="team_color" value=""><br><br>
-               <button class="button"> Submit </button>
+               <button class="button" name = "add" value = "add"> Submit </button>
              </form>
            </div>
 
          </div>
 
-         <input type="text" id="searchInput" onkeyup="TeamFilter()" placeholder="Search..">
-
-         <br>
-         <button class="button green-bg"> Search </button>
+         <form action="/teams" method="post">
+           <input type="text" id="searchInput" name= "searchInput" placeholder="Search.." value ="">
+           <button class="button green-bg" name = "search" value = "search"> Search </button>
+         </form>
 
          <table id="TeamTable">
             <thead>
                <tr>
                   <th>Team Name</th>
                   <th>Team Color</th>
+                  <th>Delete</th>
                </tr>
             </thead>
             <tbody>

@@ -54,6 +54,7 @@ module.exports = function(){
     });
 
     router.post('/', function(req, res){
+        if (req.body['add']){
         console.log(req.body)
         var mysql = req.app.get('mysql');
         var sql = "INSERT INTO team (team_name, team_color) VALUES ('" + req.body.team_name + "', '" + req.body.team_color + "');";
@@ -66,8 +67,32 @@ module.exports = function(){
                 res.end();
             }else{
                 res.redirect('/teams');
-            }
+             }
         });
+        } else if (req.body['search']){
+            console.log("Searching");
+            var callbackCount = 0;
+            var context = {};
+            context.jsscripts = ["deleteperson.js","filterpeople.js","searchpeople.js", "deleteteams.js"];
+            var mysql = req.app.get('mysql');
+            var sql =  "SELECT team.team_name, team.team_color, id FROM team WHERE team.team_name = '" + req.body.searchInput + "';";
+            console.log(sql);
+           sql = mysql.pool.query(sql, function(error, results, fields){
+                if(error){
+                res.write(JSON.stringify(error));
+                res.end();
+            }
+            context.teams = results;
+            complete();
+            })
+            function complete(){
+                callbackCount++;
+                if(callbackCount >= 1){
+                    res.render('teams', context);
+                }
+
+            }
+        }
     });
 
     return router;

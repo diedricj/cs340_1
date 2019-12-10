@@ -138,28 +138,55 @@ module.exports = function(){
 
 
     router.post('/', function(req, res){
-        console.log("im in ur post")
-        console.log(req.body)
-        var mysql = req.app.get('mysql');
-        var sql = "INSERT INTO accepting VALUES ((SELECT trainer.id FROM trainer WHERE trainer.trainer_name = '" +
-         req.body.trainer_name + "'), (SELECT pokedex.id FROM pokedex WHERE pokedex.pokemon_name = '" +
-         req.body.pokemon_name + "' and pokedex.special = " +
-         req.body.special + " and pokedex.shiny = " +
-         req.body.shiny + " and pokedex.regional = " +
-         req.body.regional +
-         "));";
-         console.log(sql);
-        var inserts = [req.body.trainer_name, req.body.pokemon_name, req.body.shiny, req.body.special];
-        sql = mysql.pool.query(sql, function(error, results, fields){
-            if(error){
-                console.log(JSON.stringify(error))
+        if (req.body['add']){
+            var mysql = req.app.get('mysql');
+            var sql = "INSERT INTO accepting VALUES ((SELECT trainer.id FROM trainer WHERE trainer.trainer_name = '" +
+             req.body.trainer_name + "'), (SELECT pokedex.id FROM pokedex WHERE pokedex.pokemon_name = '" +
+             req.body.pokemon_name + "' and pokedex.special = " +
+             req.body.special + " and pokedex.shiny = " +
+             req.body.shiny + " and pokedex.regional = " +
+             req.body.regional +
+             "));";
+             console.log(sql);
+            var inserts = [req.body.trainer_name, req.body.pokemon_name, req.body.shiny, req.body.special];
+            sql = mysql.pool.query(sql, function(error, results, fields){
+                if(error){
+                    console.log(JSON.stringify(error))
+                    res.write(JSON.stringify(error));
+                    res.end();
+                }else{
+                    res.redirect('/accept');
+                }
+            });
+        }else if (req.body['search']){
+            console.log(req.body);
+            var callbackCount = 0;
+            var context = {};
+            context.jsscripts = ["deleteperson.js","filterpeople.js","searchpeople.js", "deleteaccept.js"];
+            var mysql = req.app.get('mysql');
+            var sql = "SELECT pokedex.pokemon_name, discord.discord_name, trainer.trainer_name, pokedex.shiny, pokedex.special, accepting.trainer_id, accepting.pokemon_id FROM pokedex JOIN accepting on accepting.pokemon_id = pokedex.id LEFT JOIN trainer on trainer.id = accepting.trainer_id LEFT JOIN discord on discord.id = trainer.discord_id WHERE " +
+            req.body.searchType + " = '" + req.body.searchInput + "' ORDER BY pokedex.dex_id;";
+            sql = mysql.pool.query(sql, function(error, results, fields){
+                if(error){
                 res.write(JSON.stringify(error));
                 res.end();
-            }else{
-                res.redirect('/accept');
             }
-        });
+            context.accepts = results;
+            complete();
+            })
+            console.log(sql);
+            getTrainer(res, mysql, context, complete);
+            getPokemon(res, mysql, context, complete);
+            function complete(){
+                callbackCount++;
+                if(callbackCount >= 3){
+                    res.render('accept', context);
+                }
+
+            }
+            }
     });
+
 
     return router;
 }();

@@ -173,13 +173,14 @@ module.exports = function(){
                 res.end();
             }
             context.offers = results;
+            complete();
             })
             console.log(sql);
             getTrainer(res, mysql, context, complete);
             getPokemon(res, mysql, context, complete);
             function complete(){
                 callbackCount++;
-                if(callbackCount >= 2){
+                if(callbackCount >= 3){
                     res.render('offer', context);
                 }
 

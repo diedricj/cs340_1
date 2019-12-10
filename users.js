@@ -75,7 +75,8 @@ module.exports = function(){
         console.log(req.body)
 
         console.log("THPSE WERE PARAMS")
-        var sql = "UPDATE trainer set trainer_name = '" + req.body.trainer_name + "' WHERE id = " + req.params.pid
+        var sql = "UPDATE trainer set trainer_name = '" + req.body.trainer_name + "', "
+        + "team_id = (SELECT id from team WHERE team.team_name = '" + req.body.Team + "') WHERE id = " + req.params.pid
         console.log(sql);
         sql = mysql.pool.query(sql,function(error, results, fields){
             if(error){

@@ -1,6 +1,13 @@
 <form id="update-user">
   Trainer Name:<br>
   <input type="text" name="trainer_name" value="{{user.trainer_name}}"><br><br>
+  Discord Name:<br>
+  <select name="Discord">
+     {{#each discord}}
+       <option>{{discord_name}}</option>
+     {{/each}}
+     <option value = null>No Discord</option>
+   </select><br>
   Team:<br>
    <select name="Team">
      {{#each team}}

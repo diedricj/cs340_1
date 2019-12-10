@@ -4,7 +4,7 @@ module.exports = function(){
 
 
     function getUsers(res, mysql, context, complete){
-            mysql.pool.query("SELECT discord.discord_name, trainer.trainer_name, team.team_name, trainer.id FROM trainer JOIN discord on discord.id = trainer.discord_id JOIN team on trainer.team_id = team.id", function(error, results, fields){
+            mysql.pool.query("SELECT discord.discord_name, trainer.trainer_name, team.team_name, trainer.id FROM trainer LEFT JOIN discord on discord.id = trainer.discord_id LEFT JOIN team on trainer.team_id = team.id", function(error, results, fields){
             if(error){
                 res.write(JSON.stringify(error));
                 res.end();
@@ -72,13 +72,19 @@ module.exports = function(){
         var mysql = req.app.get('mysql');
         console.log("IN PUT")
         console.log("PID:" + req.params.pid)
-        console.log(req.body)
-
-        console.log("THPSE WERE PARAMS")
-        var sql = "UPDATE trainer set trainer_name = '" + req.body.trainer_name + "', "
-        + "team_id = (SELECT id from team WHERE team.team_name = '" + req.body.Team + "') WHERE id = " + req.params.pid
-        console.log(sql);
-        sql = mysql.pool.query(sql,function(error, results, fields){
+        console.log("req.body", req.body)
+        if(req.body.Discord != 'null'){
+            var sql = "UPDATE trainer set trainer_name = '" + req.body.trainer_name + "', "
+            + "team_id = (SELECT id from team WHERE team.team_name = '" + req.body.Team + "'), "
+            +  "discord_id = (SELECT id from discord WHERE discord.discord_name = '" + req.body.Discord + "') WHERE id = " + req.params.pid
+        }
+        else{
+            var sql = "UPDATE trainer set trainer_name = '" + req.body.trainer_name + "', "
+            + "team_id = (SELECT id from team WHERE team.team_name = '" + req.body.Team + "'), "
+            +  "discord_id = NULL WHERE id = " + req.params.pid
+        }
+        
+       sql = mysql.pool.query(sql,function(error, results, fields){
             if(error){
                 console.log(error)
                 res.write(JSON.stringify(error));
@@ -97,12 +103,13 @@ module.exports = function(){
         var context = {};
         context.jsscripts = ["selectedplanet.js", "updateoffer.js", "selectoptions.js", "updateuser.js"];
         var mysql = req.app.get('mysql');
+        getDiscord(res, mysql, context, complete);
         getUser(res, mysql, context, req.params.id, complete);
         getTeams(res, mysql, context, complete);
         //getPlanets(res, mysql, context, complete);
         function complete(){
             callbackCount++;
-            if(callbackCount >= 2){
+            if(callbackCount >= 3){
                 res.render('update-users', context);
             }
 
@@ -147,7 +154,7 @@ module.exports = function(){
             var context = {};
             context.jsscripts = ["deleteperson.js","filterpeople.js","searchpeople.js", "deleteoffer.js"];
             var mysql = req.app.get('mysql');
-            var sql = "SELECT discord.discord_name, trainer.trainer_name, team.team_name FROM trainer JOIN discord on discord.id = trainer.discord_id JOIN team on trainer.team_id = team.id WHERE " +
+            var sql = "SELECT discord.discord_name, trainer.trainer_name, team.team_name FROM trainer LEFT JOIN discord on discord.id = trainer.discord_id JOIN team on trainer.team_id = team.id WHERE " +
             req.body.searchType + " = '" + req.body.searchInput + "' ORDER BY discord.discord_name;";
             sql = mysql.pool.query(sql, function(error, results, fields){
             if(error){

@@ -38,17 +38,19 @@
                     <option>{{team_name}}</option>
                   {{/each}}
                 </select><br>
-               <button class="button"> Submit </button>
+               <button class="button" name = "add" value = "add"> Submit </button>
              </form>
            </div>
 
          </div>
 
-         <input type="text" id="offersInput" onkeyup="offersFilter()" placeholder="Search..">
-         <input type="radio" checked> Discord Name
-         <input type="radio" > Trainer Name
-         <input type="radio" > Team Name<br>
-         <button class="button green-bg"> Search </button>
+         <form action="/users" method="post">
+           <input type="text" id="searchInput" name= "searchInput" placeholder="Search.." value ="">
+           <input type="radio" name="searchType" value="discord.discord_name" checked> Discord Name
+           <input type="radio" name="searchType" value="trainer.trainer_name"> Trainer Name
+           <input type="radio" name="searchType" value="team.team_name"> Team Name<br>
+           <button class="button green-bg" name = "search" value = "search"> Search </button>
+         </form>
          <table id="offersTable">
             <thead>
                <tr>

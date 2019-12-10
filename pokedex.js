@@ -108,7 +108,7 @@ module.exports = function(){
         console.log(req.body)
 
         console.log("THPSE WERE PARAMS")
-        var sql = "UPDATE pokedex set pokemon_name = '" + req.body.pokemon_name + "', regional = " + req.body.regional + ", shiny = " + req.body.shiny + ", special = " + req.body.shiny + " WHERE id = " + req.params.pid
+        var sql = "UPDATE pokedex set pokemon_name = '" + req.body.pokemon_name + "', regional = " + req.body.regional + ", shiny = " + req.body.shiny + ", special = " + req.body.special + " WHERE id = " + req.params.pid
         console.log(sql);
         sql = mysql.pool.query(sql,function(error, results, fields){
             if(error){
